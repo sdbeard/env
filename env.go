@@ -184,6 +184,11 @@ func ParseWithFuncs(v interface{}, funcMap map[reflect.Type]ParserFunc, opts ...
 func doParse(ref reflect.Value, funcMap map[reflect.Type]ParserFunc, opts []Options) error {
 	refType := ref.Type()
 
+	refValue := ref.Addr().Interface()
+	if parser, ok := refValue.(EnvParser); ok {
+		return parser.ParseEnv()
+	}
+
 	for i := 0; i < refType.NumField(); i++ {
 		refField := ref.Field(i)
 		if !refField.CanSet() {
