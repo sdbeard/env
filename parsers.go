@@ -6,6 +6,18 @@ import (
 	"strings"
 )
 
+// ExtendedTypeParsers puts all of the parsers listed into a single map that can be
+// passed to the primary environment for including these parsers to parse those
+// environment variables
+func ExtendedTypeParsers() map[reflect.Type]ParserFunc {
+	parserMap := make(map[reflect.Type]ParserFunc)
+
+	// Add the generic map
+	parserMap[reflect.TypeOf(map[string]interface{}{})] = GenericMapParser
+
+	return parserMap
+}
+
 // EnvParser defines the interface that allows an object o implement their own
 // custom parsing logic, similar to the json Unmarshal capability
 type EnvParser interface {
@@ -39,15 +51,3 @@ var (
 
 	/******************************************************************************/
 )
-
-// ExtendedTypeParsers puts all of the parsers listed into a single map that can be
-// passed to the primary environment for including these parsers to parse those
-// environment variables
-func ExtendedTypeParsers() map[reflect.Type]ParserFunc {
-	parserMap := make(map[reflect.Type]ParserFunc)
-
-	// Add the generic map
-	parserMap[reflect.TypeOf(map[string]interface{}{})] = GenericMapParser
-
-	return parserMap
-}
