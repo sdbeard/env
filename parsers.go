@@ -40,10 +40,10 @@ var (
 	/******************************************************************************/
 )
 
-// GetExtendedTypeParsers puts all of the parsers listed into a single map that can
-// be passed to the primary environment for including these parsers to parse those
+// ExtendedTypeParsers puts all of the parsers listed into a single map that can be
+// passed to the primary environment for including these parsers to parse those
 // environment variables
-func GetExtendedTypeParsers() map[reflect.Type]ParserFunc {
+func ExtendedTypeParsers() map[reflect.Type]ParserFunc {
 	parserMap := make(map[reflect.Type]ParserFunc)
 
 	// Add the generic map
