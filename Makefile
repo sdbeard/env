@@ -1,37 +1,42 @@
-SOURCE_FILES?=./...
-TEST_PATTERN?=.
+#***********************************************************************************
+# The MIT License (MIT)
+#
+# Copyright (c) 2022 Sean Beard
 
-export GO111MODULE := on
+# Permission is hereby granted, free of charge, to any person obtaining a copy of
+# this software and associated documentation files (the "Software"), to deal in the
+# Software without restriction, including without limitation the rights to use, copy,
+# modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+# and to permit persons to whom the Software is furnished to do so, subject to the
+# following conditions:
 
-setup:
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+# INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+# PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+# CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# ***********************************************************************************
+SHELL := /bin/bash
+
+# ==================================================================================
+# Modules support
+
+deps-reset:
+	git checkout -- go.mod
 	go mod tidy
-.PHONY: setup
 
-build:
-	go build
-.PHONY: build
+tidy:
+	go mod tidy
 
-test:
-	go test -v -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.txt $(SOURCE_FILES) -run $(TEST_PATTERN) -timeout=2m
-.PHONY: test
+deps-upgrade:
+	go get -u -t -d -v ./...
+	go mod tidy
 
-cover: test
-	go tool cover -html=coverage.txt
-.PHONY: cover
+deps-cleancache:
+	go clean -modcache
 
-fmt:
-	find . -name '*.go' -not -wholename './vendor/*' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; done
-.PHONY: fmt
-
-lint:
-	./bin/golangci-lint run ./...
-.PHONY: lint
-
-ci: build test
-.PHONY: ci
-
-card:
-	wget -O card.png -c "https://og.caarlos0.dev/**env**: parse envs to structs.png?theme=light&md=1&fontSize=100px&images=https://github.com/caarlos0.png"
-.PHONY: card
-
-.DEFAULT_GOAL := ci
+# ==================================================================================

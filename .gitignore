@@ -1,5 +1,7 @@
-coverage.txt
-bin
-card.png
-dist
+#== Go ====================
 go.sum
+vendor
+
+# == VSCode ===============
+.vscode
+__debug_bin
